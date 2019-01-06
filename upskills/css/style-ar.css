@@ -1,0 +1,28 @@
+body{
+    direction: rtl;
+}
+.feature .feature-icon{
+    right: 0;
+}
+.feature-content{
+    padding-left: 0;
+    padding-right: 100px;
+}
+
+.logo{
+
+    padding-left: 0;
+    padding-right: 100px;
+
+}
+@media (min-width: 768px){
+    .navbar-nav>li{
+        float: right;
+    }
+}
+.footer-social li a {
+    padding: 10px;
+}
+.footer-social li a {
+    padding: 10px;
+}
