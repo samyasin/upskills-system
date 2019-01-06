@@ -15,35 +15,47 @@ $instructorset = mysqli_fetch_assoc($result);
 
 if (isset($_POST['submit'])) {
     $name = $_POST['name'];
-        $number = $_POST['number'];
-        $email = $_POST['email'];
-        $national_id= $_POST['national_id'];
-        $major = $_POST['major'];
-        $cv = $_FILES['cv']['name'];
-        $photo = $_FILES['photo']['name'];
+    $number = $_POST['number'];
+    $email = $_POST['email'];
+    $national_id = $_POST['national_id'];
+    $major = $_POST['major'];
+    $cv = $_FILES['cv']['name'];
+    $photo = $_FILES['photo']['name'];
 
     //$category_name = $_POST['category_name'];
     //$category_image = $post['category_image'];
-    if ($_FILES['image']['error'] == 0 && $_FILES['cv']['error'] == 0 ) {
+    if ($_FILES['photo']['error'] == 0 && $_FILES['cv']['error'] == 0) {
         $path = "../uploads/instructor/";
         $image_name = $_FILES['photo']['name'];
         $tmp_name = $_FILES['photo']['tmp_name'];
         move_uploaded_file($tmp_name, $path . $image_name);
-        
+
         $path = "../uploads/cv/";
         $cv_name = $_FILES['cv']['name'];
         $tmp_name = $_FILES['cv']['tmp_name'];
         move_uploaded_file($tmp_name, $path . $cv_name);
-       
-        $query = "update instructor set  instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major',cv='$cv',photo='$photo' where instructor_id= {$_GET['instructor_id']}";
-    } else {
-               $query = "update instructor set  instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major',cv='$cv' where instructor_id= {$_GET['instructor_id']}";
 
+        $query = "update instructor set instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major',cv='$cv',photo='$photo' where instructor_id= {$_GET['instructor_id']}";
+    } else if(!empty ($cv) && !empty ($photo)) {
+        $query = "update instructor set instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major' where instructor_id= {$_GET['instructor_id']}";
+    }else if(!empty($cv)){
+          $query = "update instructor set instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major',cv='$cv' where instructor_id= {$_GET['instructor_id']}";
+    }else if(!empty($photo)) {
+        $query = "update instructor set instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major',photo='$photo' where instructor_id= {$_GET['instructor_id']}";  
     }
+    else if(empty ($cv) && empty ($photo)){
+        $query = "update instructor set instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major' where instructor_id= {$_GET['instructor_id']}";     
+    }
+    else if(empty($cv) && !empty ($photo))
+    {
+              $query = "update instructor set instructor_name='$name',phone='$number',Email='$email',national_number='$national_id',major='$major',photo='$photo' where instructor_id= {$_GET['instructor_id']}";     
+  
+    }
+
 
     mysqli_query($link, $query);
     header("location:instructor.php");
-    
+
 //    echo '<script language="javascript">';
 //  echo 'alert(message successfully sent)';  //not showing an alert box.
 //  echo '</script>';
@@ -75,7 +87,7 @@ if (isset($_POST['submit'])) {
                 <div class="panel-heading">update instructor</div>
                 <div class="panel-body">
                     <div class="col-md-12">
-                       <form action="" method="post" enctype="multipart/form-data"  role="form">
+                        <form action="" method="post" enctype="multipart/form-data"  role="form">
                             <div class="form-group">
                                 <label>name</label>
                                 <input class="form-control" placeholder="" type="text" name="name" value="<?php echo $instructorset['instructor_name']; ?>"  >
@@ -98,12 +110,12 @@ if (isset($_POST['submit'])) {
                                 <label>Major</label>
                                 <input class="form-control" placeholder="" type="text" name="major" value="<?php echo $instructorset['major']; ?>"  >
                             </div>
-                            
+
                             <div class="form-group">
                                 <label>Upload cv</label>
                                 <input class="form-control" placeholder="" type="file" name="cv" value="<?php echo $instructorset['cv']; ?>" >
                             </div>
-                            
+
                             <div class="form-group">
                                 <label>photo</label>
                                 <input class="form-control" placeholder="" type="file" name="photo" value="<?php echo $instructorset['photo']; ?>"  >
@@ -117,7 +129,7 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
         </div><!-- /.panel-->
-        
+
 
 
     </div><!-- /.col-->
